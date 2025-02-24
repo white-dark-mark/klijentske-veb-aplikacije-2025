@@ -1,1 +1,13 @@
-<p>home works!</p>
+<div *ngIf="error">
+    <h3>Oops, an error occured!</h3>
+    <p style="color: red;">{{error}}</p>
+</div>
+
+<div *ngIf="flights">
+    <p *ngFor="let flight of flights">{{flight.id}} {{flight.destination}} {{flight.flightKey}}</p>
+    <pre>{{flights | json}}</pre>
+</div>
+
+<div *ngIf="!flights && !error">
+    <p>podaci se ucitavaju</p>
+</div>
