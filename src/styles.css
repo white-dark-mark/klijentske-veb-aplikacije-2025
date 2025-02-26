@@ -1,7 +1,7 @@
 html,
 body {
     height: 100%;
-    background-color: #36393e;
+    background-color: #1e2124;
     color: white;
 }
 
@@ -12,4 +12,22 @@ a {
 body {
     margin: 0;
     font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.container {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.example-card {
+    max-width: 400px;
+}
+
+.loading {
+    text-align: center;
+    width: 600px;
+    height: 300px;
+    align-items: center;
 }
