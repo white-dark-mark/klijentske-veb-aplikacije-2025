@@ -1,0 +1,54 @@
+<div class="wrapper" *ngIf="dataSource">
+    <h1>Search</h1>
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef>
+                <i class="fa-solid fa-hashtag"></i> ID
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="destination">
+            <th mat-header-cell *matHeaderCellDef>
+                <i class="fa-solid fa-map-location-dot"></i> Destination
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.destination}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="flightNumber">
+            <th mat-header-cell *matHeaderCellDef>
+                <i class="fa-solid fa-plane-circle-exclamation"></i> Flight Number
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.flightNumber}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="scheduledAt">
+            <th mat-header-cell *matHeaderCellDef>
+                <i class="fa-solid fa-clock-rotate-left"></i> Scheduled At
+            </th>
+            <td mat-cell *matCellDef="let element">
+                {{utils.formatDate(element.estimatedAt?element.estimatedAt:element.scheduledAt)}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>
+                <i class="fa-solid fa-location-arrow"></i> Actions
+            </th>
+            <td mat-cell *matCellDef="let element">
+                <button mat-button>
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Details
+                </button>
+                <button mat-button>
+                    <i class="fa-solid fa-cart-shopping"></i> Book Now
+                </button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>
+
+<app-loading *ngIf="!dataSource" />
