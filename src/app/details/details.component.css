@@ -1,5 +1,5 @@
 .flight-card {
-    width: 49%;
+    min-width: 49%;
 }
 
 .flight-content {
