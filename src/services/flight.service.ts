@@ -28,6 +28,6 @@ export class FlightService {
     }
 
     static async getFlightById(id: number) {
-        return axios.get(`/flight/${id}`)
+        return client.get(`/flight/${id}`)
     }
 }

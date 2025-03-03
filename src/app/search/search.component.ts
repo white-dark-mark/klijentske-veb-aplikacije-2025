@@ -6,10 +6,11 @@ import { FlightService } from '../../services/flight.service';
 import { MatButtonModule } from '@angular/material/button';
 import { UtilsService } from '../../services/utils.service';
 import { LoadingComponent } from "../loading/loading.component";
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-search',
-  imports: [MatTableModule, NgIf, MatButtonModule, LoadingComponent],
+  imports: [MatTableModule, NgIf, MatButtonModule, LoadingComponent, RouterLink],
   templateUrl: './search.component.html',
   styleUrl: './search.component.css'
 })
