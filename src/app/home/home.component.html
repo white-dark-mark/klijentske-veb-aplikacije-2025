@@ -20,9 +20,9 @@
             <a mat-button [routerLink]="['/details/', flight.id]">
                 <i class="fa-solid fa-arrow-up-right-from-square"></i> Details
             </a>
-            <button mat-button>
+            <a mat-button [routerLink]="['/details/'+flight.id+'/order']">
                 <i class="fa-solid fa-cart-shopping"></i> Book Now
-            </button>
+            </a>
         </mat-card-actions>
     </mat-card>
 </div>
