@@ -1,4 +1,9 @@
 <div class="wrapper">
+
+    <button mat-button (click)="doChangePassword()">
+        CHANGE PASSWORD NOW
+    </button>
+
     <div *ngIf="orders.length == 0">
         <p>Nema ordera</p>
     </div>
