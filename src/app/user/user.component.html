@@ -1,0 +1,14 @@
+<div class="wrapper">
+    <div *ngIf="orders.length == 0">
+        <p>Nema ordera</p>
+    </div>
+    
+    <div *ngIf="orders.length > 0">
+        <h3>Spisak Ordera</h3>
+        <ul>
+            <li *ngFor="let order of orders">
+                {{order.destination}} {{order.flightNumber}} {{order.pricePerItem}} {{order.flightId}}
+            </li>
+        </ul>
+    </div>
+</div>

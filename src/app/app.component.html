@@ -10,9 +10,15 @@
     <a routerLink="/airlines" mat-button>
         <i class="fa-solid fa-plane"></i> Airlines
     </a>
-    <a routerLink="/login" mat-button>
+    <a routerLink="/login" mat-button *ngIf="!service.getActiveUser()">
         <i class="fa-solid fa-right-to-bracket"></i> Login
     </a>
+    <a routerLink="/user" mat-button *ngIf="service.getActiveUser()">
+        <i class="fa-solid fa-user"></i> Profile
+    </a>
+    <button mat-button *ngIf="service.getActiveUser()" (click)="doLogout()">
+        <i class="fa-solid fa-right-from-bracket"></i> Logout
+    </button>
     <a routerLink="/about" mat-button>
         <i class="fa-solid fa-circle-info"></i> About
     </a>
