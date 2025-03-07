@@ -19,7 +19,7 @@ export class SearchComponent {
   dataSource: FlightModel[] | null = null
 
   public constructor(public utils: UtilsService) {
-    FlightService.getFlights(0, 8)
+    FlightService.getFlights(0, 30)
       .then(rsp => this.dataSource = rsp.data.content)
   }
 }
