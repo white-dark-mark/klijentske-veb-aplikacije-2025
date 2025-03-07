@@ -1,19 +1,22 @@
 import { Component } from '@angular/core';
 import { UserService } from '../../services/user.service';
-import { Router } from '@angular/router';
-import { OrderModel } from '../../models/order.model';
-import { NgFor, NgIf } from '@angular/common';
+import { Router, RouterLink } from '@angular/router';
+import { NgIf } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { UserModel } from '../../models/user.model';
+import { MatTableModule } from '@angular/material/table';
+import { OrderModel } from '../../models/order.model';
 
 @Component({
   selector: 'app-user',
-  imports: [NgIf, NgFor, MatButtonModule],
+  imports: [NgIf, MatButtonModule, MatCardModule, MatTableModule, RouterLink],
   templateUrl: './user.component.html',
   styleUrl: './user.component.css'
 })
 export class UserComponent {
-
-  public orders: OrderModel[] = []
+  public displayedColumns: string[] = ['id', 'destination', 'airline', 'count', 'price', 'total', 'status', 'rating', 'actions'];
+  public user: UserModel | null = null
 
   constructor(private router: Router) {
     if (!UserService.getActiveUser()) {
@@ -23,7 +26,7 @@ export class UserComponent {
       return
     }
 
-    this.orders = UserService.getActiveUser()!.orders
+    this.user = UserService.getActiveUser()
   }
 
   public doChangePassword() {
@@ -32,7 +35,19 @@ export class UserComponent {
       alert('Password cant be empty')
       return
     }
-    
+
     alert(UserService.changePassword(newPassword) ? 'Password has been changed' : 'Failed to change password')
+  }
+
+  public doPay(order: OrderModel) {
+    if (UserService.changeOrderStatus('paid', order.id)) {
+      this.user = UserService.getActiveUser()
+    }
+  }
+
+  public doCancel(order: OrderModel) {
+    if (UserService.changeOrderStatus('canceled', order.id)) {
+      this.user = UserService.getActiveUser()
+    }
   }
 }

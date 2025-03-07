@@ -1,6 +1,7 @@
 import { AirlineModel } from "./airline.model"
 
 export interface OrderModel {
+    id: number
     flightId: number
     flightNumber: string
     airline: AirlineModel

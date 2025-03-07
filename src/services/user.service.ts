@@ -31,7 +31,7 @@ export class UserService {
     }
 
     static getActiveUser(): UserModel | null {
-        if (!localStorage.getItem('active')) 
+        if (!localStorage.getItem('active'))
             return null
 
         for (let user of this.retrieveUsers()) {
@@ -53,6 +53,25 @@ export class UserService {
             }
         }
 
+        return false
+    }
+
+    static changeOrderStatus(state: 'ordered' | 'paid' | 'canceled', id: number) {
+        const active = this.getActiveUser()
+        if (active) {
+            const arr = this.retrieveUsers()
+            for (let user of arr) {
+                if (user.email == active.email) {
+                    for (let order of user.orders) {
+                        if (order.id == id) {
+                            order.status = state
+                        }
+                    }
+                    localStorage.setItem('users', JSON.stringify(arr))
+                    return true
+                }
+            }
+        }
         return false
     }
 
