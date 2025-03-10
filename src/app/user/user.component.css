@@ -11,3 +11,16 @@
     flex-direction: row;
     align-items: center;
 }
+
+.no-order {
+    margin-top: 30px;
+    width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.no-border {
+    margin: 0;
+    padding: 0;
+}

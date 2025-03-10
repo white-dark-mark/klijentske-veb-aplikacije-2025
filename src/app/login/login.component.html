@@ -5,7 +5,7 @@
     <mat-card-content>
         <mat-form-field class="full-width">
             <mat-label>Email</mat-label>
-            <input type="text" matInput placeholder="Input your email..." [(ngModel)]="email">
+            <input type="email" matInput placeholder="Input your email..." [(ngModel)]="email">
         </mat-form-field>
         <mat-form-field class="full-width">
             <mat-label>Password</mat-label>
@@ -16,7 +16,7 @@
         <button type="button" mat-button (click)="doLogin()">
             <i class="fa-solid fa-right-to-bracket"></i> Login now
         </button>
-        <a routerLink="/signup" mat-button>
+        <a mat-button routerLink="/signup">
             <i class="fa-solid fa-arrow-up-right-from-square"></i> Create an account
         </a>
     </mat-card-actions>

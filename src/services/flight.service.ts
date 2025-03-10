@@ -30,4 +30,8 @@ export class FlightService {
     static async getFlightById(id: number) {
         return client.get(`/flight/${id}`)
     }
+
+    static async getDestinations() {
+        return client.get('/flight/destination')
+    }
 }
