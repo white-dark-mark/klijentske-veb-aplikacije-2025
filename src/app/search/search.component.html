@@ -1,5 +1,21 @@
 <div class="wrapper" *ngIf="dataSource">
     <h1>Search</h1>
+    <mat-card>
+        <mat-card-content>
+            <mat-form-field>
+                <mat-label>Search</mat-label>
+                <input type="text" matInput placeholder="Enter search criteria" (keyup)="doSearch($event)">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Select Destination</mat-label>
+                <mat-select (selectionChange)="doSelectDestination($event)" [(ngModel)]="selectedDestination">
+                    <mat-option *ngFor="let dest of destinationList" [value]="dest">
+                        {{dest}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </mat-card-content>
+    </mat-card>
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
         <ng-container matColumnDef="id">
