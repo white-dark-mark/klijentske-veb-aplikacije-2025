@@ -1,7 +1,11 @@
 .user-card {
     margin-left: auto;
     margin-right: auto;
-    max-width: 350px;
+    max-width: 800px;
+}
+
+.user-card-content {
+    padding: 10px;
 }
 
 .actions {

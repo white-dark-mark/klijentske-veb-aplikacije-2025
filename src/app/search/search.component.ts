@@ -37,32 +37,71 @@ export class SearchComponent {
   destinationList: string[] = []
   selectedDestination: string | null = null
   dataSource: FlightModel[] | null = null
+  flightNumberList: string[] = []
+  selectedFlightNumber: string | null = null
+  userInput: string = ''
+  dateOptions: string[] = []
+  selectedDate: string | null = null
 
   public constructor(public utils: UtilsService) {
     FlightService.getFlightList()
       .then(rsp => {
         this.allData = rsp.data
         this.dataSource = rsp.data
-        this.destinationList = rsp.data.map((obj: FlightModel) => obj.destination)
+        this.generateSearchCriteria(rsp.data)
       })
   }
 
-  public doSearch(e: any) {
-    const input = e.target.value
+  public generateSearchCriteria(source: FlightModel[]) {
+    this.destinationList = source.map(obj => obj.destination)
+      .filter((dest: string, i: number, ar: any[]) => ar.indexOf(dest) === i)
+    this.flightNumberList = source.map(obj => obj.flightNumber)
+      .filter((num: string, i: number, ar: any[]) => ar.indexOf(num) === i)
+    this.dateOptions = source.map(obj => obj.scheduledAt)
+      .map((obj: string) => obj.split('T')[0])
+      .filter((date: string, i: number, ar: any[]) => ar.indexOf(date) === i)
+  }
+
+  public doReset() {
+    this.userInput = ''
+    this.selectedDestination = null
+    this.selectedFlightNumber = null
+    this.selectedDate = null
+    this.dataSource = this.allData
+    this.generateSearchCriteria(this.allData!)
+  }
+
+  public doFilterChain() {
     if (this.allData == null) return
 
-    if (input == '') {
-      this.dataSource = this.allData
-      return
-    }
-
-    this.dataSource = this.allData
+    this.dataSource = this.allData!
       .filter(obj => {
-        return obj.destination.toLowerCase().includes(input) || obj.id.toString().includes(input) || obj.flightNumber.includes(input)
+        // Input Field Search
+        if (this.userInput == '') return true
+        return obj.destination.toLowerCase().includes(this.userInput) ||
+          obj.id.toString().includes(this.userInput) ||
+          obj.flightNumber.includes(this.userInput)
       })
-  }
+      .filter(obj => {
+        // Destintination Search
+        if (this.selectedDestination == null) return true
+        return obj.destination === this.selectedDestination
+      })
+      .filter(obj => {
+        // Flight Number Search
+        if (this.selectedFlightNumber == null) return true
+        return obj.flightNumber === this.selectedFlightNumber
+      })
+      .filter(obj => {
+        // Date Search
+        if (this.selectedDate == null) return true
+        const start = new Date(`${this.selectedDate}T00:00:01`)
+        const end = new Date(`${this.selectedDate}T23:59:59`)
+        const scheduled = new Date(obj.scheduledAt)
 
-  public doSelectDestination(e: any) {
-    this.dataSource = this.allData!.filter(obj=>obj.destination === this.selectedDestination)
+        return (start <= scheduled) && (scheduled <= end)
+      })
+
+    this.generateSearchCriteria(this.dataSource)
   }
 }

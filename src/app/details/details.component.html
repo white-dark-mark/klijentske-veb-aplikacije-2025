@@ -4,12 +4,36 @@
         <img [src]="utils.generateDestinationImage(flight.destination)" [alt]="flight.destination">
         <mat-card class="flight-card" appearance="outlined">
             <mat-card-content>
-                <h3>Flight Details</h3>
+                <h2>Flight Details</h2>
                 <mat-list role="list">
-                    <mat-list-item>Scheduled At: {{utils.formatDate(flight.scheduledAt)}}</mat-list-item>
-                    <mat-list-item>Flight Number: {{flight.flightNumber}}</mat-list-item>
-                    <mat-list-item>Airplane Model: {{flight.plane}}</mat-list-item>
-                    <mat-list-item>Flight Type: {{flight.type.name}}</mat-list-item>
+                    <mat-list-item>
+                        <span matListItemTitle>Scheduled At:</span>
+                        <span matListItemLine>{{utils.formatDate(flight.scheduledAt)}}</span>
+                         <span matListItemIcon>
+                            <i class="fa-solid fa-clock-rotate-left"></i>
+                         </span>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <span matListItemTitle>Flight Number:</span>
+                        <span matListItemLine>{{flight.flightNumber}}</span>
+                        <span matListItemIcon>
+                            <i class="fa-solid fa-plane-circle-exclamation"></i>
+                        </span>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <span matListItemTitle>Airplane Model:</span>
+                        <span matListItemLine>{{flight.plane}}</span>
+                        <span matListItemIcon>
+                            <i class="fa-solid fa-font-awesome"></i>
+                        </span>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <span matListItemTitle>Flight Type:</span>
+                        <span matListItemLine>{{flight.type.name}}</span>
+                        <span matListItemIcon>
+                            <i class="fa-solid fa-circle-exclamation"></i>
+                        </span>
+                    </mat-list-item>
                 </mat-list>
             </mat-card-content>
             <mat-card-actions>

@@ -9,11 +9,32 @@
                 <p class="no-border">Destination: {{user.favouriteDestination}}</p>
             </mat-card-subtitle>
         </mat-card-header>
-        <mat-card-actions>
-            <button mat-button (click)="doChangePassword()">
-                <i class="fa-solid fa-key"></i> Change Password
-            </button>
-        </mat-card-actions>
+        <mat-card-content class="user-card-content">
+            <mat-accordion multi>
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            <i class="fa-solid fa-key"></i>&nbsp;Change Password
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <mat-form-field>
+                        <mat-label>Old password</mat-label>
+                        <input matInput type="password" [(ngModel)]="oldPasswordValue" />
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>New password</mat-label>
+                        <input matInput type="password" [(ngModel)]="newPasswordValue" />
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Repeat password</mat-label>
+                        <input matInput type="password" [(ngModel)]="repeatPasswordValue" />
+                    </mat-form-field>
+                    <button mat-button (click)="doChangePassword()">
+                         Sumbit
+                    </button>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </mat-card-content>
     </mat-card>
 
     <mat-card appearance="outlined" *ngIf="user.orders.length == 0" class="no-order">
@@ -40,6 +61,13 @@
                         <i class="fa-solid fa-map-location-dot"></i> Destination
                     </th>
                     <td mat-cell *matCellDef="let element"> {{element.destination}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="flightNumber">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <i class="fa-solid fa-plane-circle-exclamation"></i> Flight Number
+                    </th>
+                    <td mat-cell *matCellDef="let element"> {{element.flightNumber}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="airline">
@@ -83,7 +111,18 @@
                         <i class="fa-regular fa-chart-bar"></i> Status
                     </th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.status.toUpperCase()}}
+                        <div *ngIf="element.status == 'paid' && element.rating == null">
+                            PAID
+                        </div>
+                        <div *ngIf="element.status == 'paid' && element.rating == true">
+                            LIKED
+                        </div>
+                        <div *ngIf="element.status == 'paid' && element.rating == false">
+                            DISLIKED
+                        </div>
+                        <div *ngIf="element.status == 'ordered' || element.status == 'canceled'">
+                            {{element.status.toUpperCase()}}
+                        </div>
                     </td>
                 </ng-container>
 
