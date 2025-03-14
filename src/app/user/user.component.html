@@ -17,20 +17,58 @@
                             <i class="fa-solid fa-key"></i>&nbsp;Change Password
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <mat-form-field>
+                    <mat-form-field class="full-width">
                         <mat-label>Old password</mat-label>
                         <input matInput type="password" [(ngModel)]="oldPasswordValue" />
                     </mat-form-field>
-                    <mat-form-field>
+                    <mat-form-field class="full-width">
                         <mat-label>New password</mat-label>
                         <input matInput type="password" [(ngModel)]="newPasswordValue" />
                     </mat-form-field>
-                    <mat-form-field>
+                    <mat-form-field class="full-width">
                         <mat-label>Repeat password</mat-label>
                         <input matInput type="password" [(ngModel)]="repeatPasswordValue" />
                     </mat-form-field>
                     <button mat-button (click)="doChangePassword()">
-                         Sumbit
+                        <i class="fa-solid fa-paper-plane"></i> Sumbit
+                    </button>
+                </mat-expansion-panel>
+                <mat-expansion-panel *ngIf="userCopy">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            <i class="fa-solid fa-user-tag"></i>&nbsp;Update profile
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <mat-form-field class="full-width">
+                        <mat-label>Email</mat-label>
+                        <input matInput type="email" [(ngModel)]="userCopy.email" disabled/>
+                    </mat-form-field>
+                    <mat-form-field class="full-width">
+                        <mat-label>First Name</mat-label>
+                        <input matInput type="text" [(ngModel)]="userCopy.firstName" />
+                    </mat-form-field>
+                    <mat-form-field class="full-width">
+                        <mat-label>Last Name</mat-label>
+                        <input matInput type="text" [(ngModel)]="userCopy.lastName" />
+                    </mat-form-field>
+                    <mat-form-field class="full-width">
+                        <mat-label>Phone</mat-label>
+                        <input matInput type="tel" [(ngModel)]="userCopy.phone" />
+                    </mat-form-field>
+                    <mat-form-field class="full-width">
+                        <mat-label>Address</mat-label>
+                        <input matInput type="text" [(ngModel)]="userCopy.address" />
+                    </mat-form-field>
+                    <mat-form-field class="full-width">
+                        <mat-label>Select Favourite Destination</mat-label>
+                        <mat-select [(ngModel)]="userCopy.favouriteDestination">
+                            <mat-option *ngFor="let dest of destinationList" [value]="dest">
+                                {{dest}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <button mat-button (click)="doUpdateUser()">
+                        <i class="fa-solid fa-paper-plane"></i> Update
                     </button>
                 </mat-expansion-panel>
             </mat-accordion>

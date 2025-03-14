@@ -14,4 +14,5 @@ export interface FlightModel {
     plane: string
     gate: null | string
     terminal: string
+    temperature: null | number
 }

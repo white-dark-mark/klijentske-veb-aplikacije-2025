@@ -13,6 +13,7 @@ import { AirlineService } from '../../services/airline.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { UserService } from '../../services/user.service';
 import { FormsModule } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-order',
@@ -37,18 +38,37 @@ export class OrderComponent {
   }
 
   public doOrder() {
-    const result = UserService.createOrder({
-      id: new Date().getTime(),
-      flightId: this.flight!.id,
-      flightNumber: this.flight!.flightNumber,
-      destination: this.flight!.destination,
-      airline: AirlineService.getAirlineById(this.selectedAirline)!,
-      count: this.selectedTicketCount,
-      pricePerItem: this.selectedPrice,
-      status: 'ordered',
-      rating: null
+    Swal.fire({
+      title: `Place an order to ${this.flight?.destination}?`,
+      text: "Orders can be canceled any time from your user profile!",
+      icon: "warning",
+      showCancelButton: true,
+      customClass: {
+        popup: 'bg-dark'
+      },
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, place an order!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const result = UserService.createOrder({
+          id: new Date().getTime(),
+          flightId: this.flight!.id,
+          flightNumber: this.flight!.flightNumber,
+          destination: this.flight!.destination,
+          airline: AirlineService.getAirlineById(this.selectedAirline)!,
+          count: this.selectedTicketCount,
+          pricePerItem: this.selectedPrice,
+          status: 'ordered',
+          rating: null
+        })
+        result ? this.router.navigate(['/user']) :
+          Swal.fire({
+            title: "Failed crating an order",
+            text: "Something is wrong with your order!",
+            icon: "error"
+          });
+      }
     })
-
-    result ? this.router.navigate(['/user']) : alert('An error occured while creating an order')
   }
 }

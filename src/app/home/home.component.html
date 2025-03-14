@@ -8,13 +8,14 @@
 </div>
 
 <div *ngIf="flights" class="container">
-    <mat-card class="example-card" appearance="outlined" *ngFor="let flight of flights">
+    <mat-card class="flight-card" appearance="outlined" *ngFor="let flight of flights">
         <img mat-card-image [src]="utils.generateDestinationImage(flight.destination)" [alt]="flight.destination">
         <mat-card-content>
             <h1>{{flight.destination}}</h1>
             <p>Scheduled at: {{utils.formatDate(flight.scheduledAt)}}</p>
             <p>Flight number: {{flight.flightNumber}}</p>
             <p>Plane model: {{flight.plane}}</p>
+            <p>Temperature: {{flight.temperature}} &deg;C</p>
         </mat-card-content>
         <mat-card-actions>
             <a mat-button [routerLink]="['/details/', flight.id]">
