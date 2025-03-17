@@ -1,7 +1,14 @@
 .search-input {
-    width: 25%;
+    width: 400px;
+}
+
+.search-input-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .search-card {
     margin-bottom: 30px;
+    width: 100%;
 }

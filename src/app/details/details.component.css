@@ -7,16 +7,26 @@
     gap: 10px;
     justify-content: center;
     flex-direction: row;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     flex-wrap: wrap;
 }
 
 .flight-content img {
-    max-width: 620px;
+    max-width: 49%;
+    border-radius: 12px;
 }
 
 .flight-map {
-    width: auto;
-    height: 100%;
+    width: 100%;
+    height: auto;
 }
 
+@media only screen and (max-width: 950px) {
+    .flight-card {
+        min-width: 100%;
+    }
+
+    .flight-content img {
+        max-width: 100%;
+    }
+}

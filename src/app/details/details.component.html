@@ -44,8 +44,10 @@
         </mat-card>
     </div>
     <div class="flight-content">
-        <mat-card class="flight-map">
-            <iframe [src]="generateMapLink() | safe" width="860" height="600"></iframe>
+        <mat-card class="flight-map" appearance="outlined">
+            <mat-card-content>
+                <iframe [src]="generateMapLink() | safe" width="100%" [height]="300"></iframe>
+            </mat-card-content>
         </mat-card>
     </div>
 </div>

@@ -59,3 +59,27 @@ body {
 .cyan {
     color: #00dddd
 }
+
+.link-name {
+    padding-left: 3px;
+}
+
+@media only screen and (max-width: 800px) {
+    .wrapper {
+        max-width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+@media only screen and (max-width: 780px) {
+    .hide-780 {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .hide-600 {
+        display: none;
+    }
+}

@@ -16,6 +16,30 @@
     align-items: center;
 }
 
+@media only screen and (max-width: 1200px) {
+    .actions {
+        min-width: 100px;
+    }
+}
+
+@media only screen and (max-width: 950px) {
+    .hide-950 {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 650px) {
+    .hide-650 {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 530px) {
+    .hide-530 {
+        display: none;
+    }
+}
+
 .no-order {
     margin-top: 30px;
     width: 800px;
