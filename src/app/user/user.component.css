@@ -18,24 +18,55 @@
 
 @media only screen and (max-width: 1200px) {
     .actions {
-        min-width: 100px;
+        min-width: 225px;
+    }
+
+    .link-name {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 1050px) {
+    .id {
+        display: none;
     }
 }
 
 @media only screen and (max-width: 950px) {
-    .hide-950 {
+    .price {
+        display: none;
+    }
+
+    .count {
+        display: none;
+    }
+
+    .actions {
+        min-width: 80px;
+        flex-direction: column;
+        align-items: start;
+        height: 120px;
+    }
+
+    th, td {
+        height: 120px;
+    }
+}
+
+@media only screen and (max-width: 750px) {
+    .airline {
         display: none;
     }
 }
 
 @media only screen and (max-width: 650px) {
-    .hide-650 {
+    .total {
         display: none;
     }
 }
 
-@media only screen and (max-width: 530px) {
-    .hide-530 {
+@media only screen and (max-width: 570px) {
+    .number {
         display: none;
     }
 }
