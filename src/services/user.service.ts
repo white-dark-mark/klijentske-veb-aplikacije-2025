@@ -3,10 +3,13 @@ import { UserModel } from "../models/user.model"
 
 export class UserService {
 
+    static lastUserId = 1; 
+
     static retrieveUsers(): UserModel[] {
         if (!localStorage.getItem('users')) {
             const arr: UserModel[] = [
                 {
+                    id: 1, 
                     email: 'user@example.com',
                     firstName: 'Example',
                     lastName: 'User',
@@ -25,6 +28,7 @@ export class UserService {
     }
 
     static createUser(model: UserModel) {
+        model.id = this.lastUserId++;
         const users = this.retrieveUsers()
 
         for (let u of users) {

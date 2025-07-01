@@ -1,0 +1,31 @@
+<div class="movies-container">
+  <div *ngFor="let movie of movies" class="movie-card">
+    <div class="movie-header">
+      <h2 class="movie-title">{{ movie.name }}</h2>
+      <span class="genre-badge">{{ movie.genre }}</span>
+      <div class="movie-info">
+        <div>Director: {{ movie.director }}</div>
+        <div>Duration: {{ movie.duration }} minutes</div>
+        <div class="actors-list">
+          Cast: {{ movie.actors.join(', ') }}
+        </div>
+        <div>Release Date: {{ movie.releaseDate | date:'mediumDate' }}</div>
+      </div>
+    </div>
+
+    <div class="projections-container">
+      <h3>Projections:</h3>
+      <ng-container *ngIf="movie.projections && movie.projections.length > 0; else noProjections">
+        <a *ngFor="let projection of movie.projections"
+           [routerLink]="['/movies', movie.id, 'projections', projection.id]"
+           class="projection-item">
+          <div>Date: {{ formatDate(projection.dateTime) }}</div>
+          <div>Price: {{ projection.price }} RSD</div>
+        </a>
+      </ng-container>
+      <ng-template #noProjections>
+        <p class="no-projections">No upcoming projections</p>
+      </ng-template>
+    </div>
+  </div>
+</div> 

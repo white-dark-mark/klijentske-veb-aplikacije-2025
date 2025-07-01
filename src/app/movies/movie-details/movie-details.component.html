@@ -1,0 +1,50 @@
+<div class="details-container" *ngIf="movie && projection">
+  <h1>{{ movie.name }}</h1>
+  <div class="projection-details">
+    <h2>Projection Details</h2>
+    <p>Date: {{ projection.dateTime | date:'medium' }}</p>
+    <p>Price: {{ projection.price }} RSD</p>
+    
+    <div class="booking-section">
+      <button mat-raised-button 
+              color="primary" 
+              *ngIf="isUserLoggedIn()"
+              (click)="bookProjection()"
+              class="book-button">
+        Book Tickets
+      </button>
+      <p class="login-prompt" *ngIf="!isUserLoggedIn()">
+        Please <a routerLink="/login">log in</a> to book tickets
+      </p>
+    </div>
+  </div>
+  <div class="movie-details">
+    <h2>Movie Information</h2>
+    <p>Genre: {{ movie.genre }}</p>
+    <p>Director: {{ movie.director }}</p>
+    <p>Duration: {{ movie.duration }} minutes</p>
+    <p>Cast: {{ movie.actors.join(', ') }}</p>
+  </div>
+
+  <div class="reviews-section">
+    <h2>Reviews</h2>
+    <div class="average-rating" *ngIf="reviews.length > 0">
+      <p>Average Rating: {{ averageRating }} / 5</p>
+      <div class="star-rating">{{ getStarRating(averageRating) }}</div>
+    </div>
+    
+    <div class="reviews-list">
+      <div *ngFor="let review of reviews" class="review-card">
+        <div class="review-header">
+          <span class="star-rating">{{ getStarRating(review.rating) }}</span>
+          <span class="review-date">{{ review.createdAt | date:'mediumDate' }}</span>
+        </div>
+        <p class="review-text">{{ review.reviewText }}</p>
+      </div>
+      
+      <p *ngIf="reviews.length === 0" class="no-reviews">
+        No reviews yet for this movie.
+      </p>
+    </div>
+  </div>
+</div> 

@@ -45,6 +45,7 @@ export class SignupComponent {
     }
 
     const result = UserService.createUser({
+      id: 1, 
       email: this.email,
       password: this.password,
       firstName: this.firstName,
