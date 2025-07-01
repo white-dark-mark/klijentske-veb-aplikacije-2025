@@ -36,7 +36,7 @@ import { Subscription } from 'rxjs';
   styleUrl: './search-movies.component.css'
 })
 export class SearchMoviesComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['movieTitle', 'genre', 'director', 'dateTime', 'price', 'actions'];
+  displayedColumns: string[] = ['movieTitle', 'genre', 'director', 'dateTime', 'price', 'rating', 'actions'];
   dataSource: ProjectionWithMovie[] | null = null;
   
   // Search criteria
@@ -48,6 +48,8 @@ export class SearchMoviesComponent implements OnInit, OnDestroy {
   dateTo: Date | null = null;
   minPrice: number | null = null;
   maxPrice: number | null = null;
+  minRating: number | null = null;
+  maxRating: number | null = null;
   
   // Lists for dropdowns
   genreList: MovieGenre[] = [];
@@ -89,6 +91,8 @@ export class SearchMoviesComponent implements OnInit, OnDestroy {
     this.dateTo = null;
     this.minPrice = null;
     this.maxPrice = null;
+    this.minRating = null;
+    this.maxRating = null;
     this.searchService.doReset();
   }
 
@@ -101,7 +105,9 @@ export class SearchMoviesComponent implements OnInit, OnDestroy {
       dateFrom: this.dateFrom,
       dateTo: this.dateTo,
       minPrice: this.minPrice,
-      maxPrice: this.maxPrice
+      maxPrice: this.maxPrice,
+      minRating: this.minRating,
+      maxRating: this.maxRating
     };
 
     this.searchService.doFilterChain(criteria);

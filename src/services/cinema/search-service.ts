@@ -2,11 +2,14 @@ import { Injectable } from '@angular/core';
 import { Movie, MovieGenre } from '../../models/cinema/movie.model';
 import { MovieProjection } from '../../models/cinema/movie-projection.model';
 import { MovieService } from './movie.service';
-import { Observable, BehaviorSubject, map } from 'rxjs';
+import { MovieReviewService } from './movie-review.service';
+import { Observable, BehaviorSubject, combineLatest, map } from 'rxjs';
 
 export interface ProjectionWithMovie {
   projection: MovieProjection;
   movie: Movie;
+  averageRating: number;
+  reviewCount: number;
 }
 
 export interface ProjectionSearchCriteria {
@@ -18,6 +21,8 @@ export interface ProjectionSearchCriteria {
   dateTo?: Date | null;
   minPrice?: number | null;
   maxPrice?: number | null;
+  minRating?: number | null;
+  maxRating?: number | null;
 }
 
 @Injectable({
@@ -34,21 +39,35 @@ export class SearchService {
   public actorList: string[] = [];
   public movieTitleList: string[] = [];
 
-  constructor(private movieService: MovieService) {
+  constructor(
+    private movieService: MovieService,
+    private movieReviewService: MovieReviewService
+  ) {
     this.loadProjections();
   }
 
   private loadProjections(): void {
-    this.movieService.getAll().subscribe(movies => {
-      // Flatten all projections from all movies
+    combineLatest([
+      this.movieService.getAll(),
+      this.movieReviewService.getAll()
+    ]).subscribe(([movies, reviews]) => {
+      // Flatten all projections from all movies and calculate ratings
       const projectionsWithMovies: ProjectionWithMovie[] = [];
       
       movies.forEach(movie => {
         if (movie.projections && movie.projections.length > 0) {
+          // Calculate average rating for this movie
+          const movieReviews = reviews.filter(review => review.movieId === movie.id);
+          const averageRating = movieReviews.length > 0 
+            ? movieReviews.reduce((sum, review) => sum + review.rating, 0) / movieReviews.length
+            : 0;
+          
           movie.projections.forEach(projection => {
             projectionsWithMovies.push({
               projection,
-              movie
+              movie,
+              averageRating: Math.round(averageRating * 10) / 10, // Round to 1 decimal
+              reviewCount: movieReviews.length
             });
           });
         }
@@ -128,6 +147,16 @@ export class SearchService {
         // Max price filter
         if (criteria.maxPrice == null) return true;
         return item.projection.price <= criteria.maxPrice;
+      })
+      .filter(item => {
+        // Min rating filter
+        if (criteria.minRating == null) return true;
+        return item.averageRating >= criteria.minRating;
+      })
+      .filter(item => {
+        // Max rating filter
+        if (criteria.maxRating == null) return true;
+        return item.averageRating <= criteria.maxRating;
       });
 
     this.filteredProjectionsSubject.next(filteredData);
@@ -151,5 +180,20 @@ export class SearchService {
 
   public getFilteredProjections(): ProjectionWithMovie[] {
     return this.filteredProjectionsSubject.value;
+  }
+
+  public getAverageRatingOfAllMovies(): number {
+    if (this.allProjections.length === 0) return 0;
+    
+    // Get unique movies to avoid counting the same movie multiple times
+    const uniqueMovies = this.allProjections.reduce((acc, item) => {
+      if (!acc.find(m => m.movie.id === item.movie.id)) {
+        acc.push(item);
+      }
+      return acc;
+    }, [] as ProjectionWithMovie[]);
+
+    const totalRating = uniqueMovies.reduce((sum, item) => sum + item.averageRating, 0);
+    return Math.round((totalRating / uniqueMovies.length) * 10) / 10;
   }
 }

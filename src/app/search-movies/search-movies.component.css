@@ -27,6 +27,7 @@ table {
 .mat-mdc-header-cell {
   font-weight: bold;
   background-color: #f5f5f5;
+  color: #333 !important;
 }
 
 .link-name {
@@ -77,4 +78,26 @@ td mat-button {
 mat-card-actions {
   padding: 16px;
   border-top: 1px solid #e0e0e0;
+}
+
+/* Rating styling */
+.no-rating {
+  color: #999;
+  font-style: italic;
+  font-size: 0.9em;
+}
+
+.rating-summary {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.rating-summary p {
+  margin: 0;
+  color: #495057;
+  font-size: 1.1em;
 } 

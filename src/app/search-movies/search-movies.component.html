@@ -5,11 +5,11 @@
             <div class="search-input-row">
                 <mat-form-field class="search-input">
                     <mat-label>Movie Title</mat-label>
-                    <input type="text" matInput placeholder="Search by movie title" (keyup)="doFilterChain()"
+                    <input type="text" matInput placeholder="Enter movie title" (keyup)="doFilterChain()"
                         [(ngModel)]="movieTitle">
                 </mat-form-field>
                 <mat-form-field class="search-input">
-                    <mat-label>Genre</mat-label>
+                    <mat-label>Select Genre</mat-label>
                     <mat-select (selectionChange)="doFilterChain()" [(ngModel)]="selectedGenre">
                         <mat-option *ngFor="let genre of genreList" [value]="genre">
                             {{getGenreDisplayName(genre)}}
@@ -19,7 +19,7 @@
             </div>
             <div class="search-input-row">
                 <mat-form-field class="search-input">
-                    <mat-label>Director</mat-label>
+                    <mat-label>Select Director</mat-label>
                     <mat-select (selectionChange)="doFilterChain()" [(ngModel)]="selectedDirector">
                         <mat-option *ngFor="let director of directorList" [value]="director">
                             {{director}}
@@ -27,7 +27,7 @@
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field class="search-input">
-                    <mat-label>Actor</mat-label>
+                    <mat-label>Select Actor</mat-label>
                     <mat-select (selectionChange)="doFilterChain()" [(ngModel)]="selectedActor">
                         <mat-option *ngFor="let actor of actorList" [value]="actor">
                             {{actor}}
@@ -63,10 +63,22 @@
                         [(ngModel)]="maxPrice">
                 </mat-form-field>
             </div>
+            <div class="search-input-row">
+                <mat-form-field class="search-input">
+                    <mat-label>Min Rating</mat-label>
+                    <input type="number" matInput placeholder="Minimum rating (0-5)" min="0" max="5" step="0.1" (keyup)="doFilterChain()"
+                        [(ngModel)]="minRating">
+                </mat-form-field>
+                <mat-form-field class="search-input">
+                    <mat-label>Max Rating</mat-label>
+                    <input type="number" matInput placeholder="Maximum rating (0-5)" min="0" max="5" step="0.1" (keyup)="doFilterChain()"
+                        [(ngModel)]="maxRating">
+                </mat-form-field>
+            </div>
         </mat-card-content>
         <mat-card-actions>
             <button mat-button (click)="doReset()">
-                <i class="fa-solid fa-ban"></i> Reset all criteria
+                <i class="fa-solid fa-ban"></i> Reset all search criteria
             </button>
         </mat-card-actions>
     </mat-card>
@@ -108,6 +120,20 @@
             <td mat-cell *matCellDef="let element"> {{formatPrice(element.projection.price)}} </td>
         </ng-container>
 
+        <ng-container matColumnDef="rating">
+            <th mat-header-cell *matHeaderCellDef>
+                <i class="fa-solid fa-star"></i> Rating
+            </th>
+            <td mat-cell *matCellDef="let element"> 
+                <span *ngIf="element.reviewCount > 0">
+                    {{element.averageRating}}/5 ({{element.reviewCount}} reviews)
+                </span>
+                <span *ngIf="element.reviewCount === 0" class="no-rating">
+                    No reviews yet
+                </span>
+            </td>
+        </ng-container>
+
         <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef>
                 <i class="fa-solid fa-location-arrow"></i> Actions
@@ -115,7 +141,7 @@
             <td mat-cell *matCellDef="let element">
                 <a mat-button [routerLink]="['/movies', element.movie.id, 'projections', element.projection.id]">
                     <i class="fa-solid fa-ticket"></i>
-                    <span class="link-name hide-780">Book Tickets</span>
+                    <span class="link-name hide-780">Details</span>
                 </a>
             </td>
         </ng-container>
@@ -123,7 +149,7 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-    <p *ngIf="dataSource.length == 0">No movie projections found matching the search criteria!</p>
+    <p *ngIf="dataSource.length == 0">Could not find any movie projections for that criteria!</p>
 </div>
 
 <app-loading *ngIf="!dataSource" /> 

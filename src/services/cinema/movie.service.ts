@@ -11,109 +11,109 @@ export class MovieService {
     {
       id: 1,
       movieId: 1,
-      dateTime: new Date('2024-03-20T18:00:00'),
+      dateTime: new Date('2025-07-05T18:00:00'),
       price: 800
     },
     {
       id: 2,
       movieId: 1,
-      dateTime: new Date('2024-03-20T20:30:00'),
+      dateTime: new Date('2025-07-05T20:30:00'),
       price: 800
     },
     {
       id: 3,
       movieId: 2,
-      dateTime: new Date('2024-03-21T19:00:00'),
+      dateTime: new Date('2025-07-08T19:00:00'),
       price: 750
     },
     {
       id: 4,
       movieId: 3,
-      dateTime: new Date('2024-03-21T21:00:00'),
+      dateTime: new Date('2025-07-10T21:00:00'),
       price: 850
     },
     {
       id: 5,
       movieId: 1,
-      dateTime: new Date('2024-03-22T16:30:00'),
+      dateTime: new Date('2025-07-12T16:30:00'),
       price: 700
     },
     {
       id: 6,
       movieId: 4,
-      dateTime: new Date('2024-03-22T19:30:00'),
+      dateTime: new Date('2025-07-15T19:30:00'),
       price: 900
     },
     {
       id: 7,
       movieId: 5,
-      dateTime: new Date('2024-03-23T17:00:00'),
+      dateTime: new Date('2025-07-18T17:00:00'),
       price: 800
     },
     {
       id: 8,
       movieId: 2,
-      dateTime: new Date('2024-03-23T20:00:00'),
+      dateTime: new Date('2025-07-20T20:00:00'),
       price: 750
     },
     {
       id: 9,
       movieId: 6,
-      dateTime: new Date('2024-03-24T15:00:00'),
+      dateTime: new Date('2025-07-22T15:00:00'),
       price: 650
     },
     {
       id: 10,
       movieId: 7,
-      dateTime: new Date('2024-03-24T18:30:00'),
+      dateTime: new Date('2025-07-25T18:30:00'),
       price: 600
     },
     {
       id: 11,
       movieId: 8,
-      dateTime: new Date('2024-03-25T19:45:00'),
+      dateTime: new Date('2025-07-28T19:45:00'),
       price: 850
     },
     {
       id: 12,
       movieId: 3,
-      dateTime: new Date('2024-03-25T22:00:00'),
+      dateTime: new Date('2025-07-30T22:00:00'),
       price: 900
     },
     {
       id: 13,
       movieId: 9,
-      dateTime: new Date('2024-03-26T17:30:00'),
+      dateTime: new Date('2025-08-02T17:30:00'),
       price: 720
     },
     {
       id: 14,
       movieId: 10,
-      dateTime: new Date('2024-03-26T20:15:00'),
+      dateTime: new Date('2025-08-05T20:15:00'),
       price: 780
     },
     {
       id: 15,
       movieId: 5,
-      dateTime: new Date('2024-03-27T16:00:00'),
+      dateTime: new Date('2025-08-08T16:00:00'),
       price: 800
     },
     {
       id: 16,
       movieId: 4,
-      dateTime: new Date('2024-03-27T21:30:00'),
+      dateTime: new Date('2025-08-12T21:30:00'),
       price: 950
     },
     {
       id: 17,
       movieId: 6,
-      dateTime: new Date('2024-03-28T14:30:00'),
+      dateTime: new Date('2025-08-15T14:30:00'),
       price: 600
     },
     {
       id: 18,
       movieId: 7,
-      dateTime: new Date('2024-03-28T19:00:00'),
+      dateTime: new Date('2025-08-18T19:00:00'),
       price: 650
     }
   ];
