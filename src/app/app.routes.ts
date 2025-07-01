@@ -9,11 +9,12 @@ import { UserComponent } from './user/user.component';
 import { OrderComponent } from './order/order.component';
 import { SignupComponent } from './signup/signup.component';
 import { MoviesComponent } from './movies/movies.component';
+import { SearchMoviesComponent } from './search-movies/search-movies.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
     { path: 'about', component: AboutComponent },
-    { path: 'search', component: SearchComponent },
+    { path: 'search', component: SearchMoviesComponent },
     { path: 'airlines', component: AirlineComponent },
     { path: 'details/:id/order', component: OrderComponent },
     { path: 'details/:id', component: DetailsComponent },

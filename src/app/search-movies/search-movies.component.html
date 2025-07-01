@@ -1,0 +1,129 @@
+<div class="wrapper" *ngIf="dataSource">
+    <h1>Movie Projections Search</h1>
+    <mat-card class="search-card">
+        <mat-card-content>
+            <div class="search-input-row">
+                <mat-form-field class="search-input">
+                    <mat-label>Movie Title</mat-label>
+                    <input type="text" matInput placeholder="Search by movie title" (keyup)="doFilterChain()"
+                        [(ngModel)]="movieTitle">
+                </mat-form-field>
+                <mat-form-field class="search-input">
+                    <mat-label>Genre</mat-label>
+                    <mat-select (selectionChange)="doFilterChain()" [(ngModel)]="selectedGenre">
+                        <mat-option *ngFor="let genre of genreList" [value]="genre">
+                            {{getGenreDisplayName(genre)}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="search-input-row">
+                <mat-form-field class="search-input">
+                    <mat-label>Director</mat-label>
+                    <mat-select (selectionChange)="doFilterChain()" [(ngModel)]="selectedDirector">
+                        <mat-option *ngFor="let director of directorList" [value]="director">
+                            {{director}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field class="search-input">
+                    <mat-label>Actor</mat-label>
+                    <mat-select (selectionChange)="doFilterChain()" [(ngModel)]="selectedActor">
+                        <mat-option *ngFor="let actor of actorList" [value]="actor">
+                            {{actor}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="search-input-row">
+                <mat-form-field class="search-input">
+                    <mat-label>Date From</mat-label>
+                    <input matInput [matDatepicker]="pickerFrom" (dateChange)="doFilterChain()" 
+                           [(ngModel)]="dateFrom" placeholder="Select start date">
+                    <mat-datepicker-toggle matIconSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerFrom></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field class="search-input">
+                    <mat-label>Date To</mat-label>
+                    <input matInput [matDatepicker]="pickerTo" (dateChange)="doFilterChain()" 
+                           [(ngModel)]="dateTo" placeholder="Select end date">
+                    <mat-datepicker-toggle matIconSuffix [for]="pickerTo"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerTo></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="search-input-row">
+                <mat-form-field class="search-input">
+                    <mat-label>Min Price</mat-label>
+                    <input type="number" matInput placeholder="Minimum price" (keyup)="doFilterChain()"
+                        [(ngModel)]="minPrice">
+                </mat-form-field>
+                <mat-form-field class="search-input">
+                    <mat-label>Max Price</mat-label>
+                    <input type="number" matInput placeholder="Maximum price" (keyup)="doFilterChain()"
+                        [(ngModel)]="maxPrice">
+                </mat-form-field>
+            </div>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-button (click)="doReset()">
+                <i class="fa-solid fa-ban"></i> Reset all criteria
+            </button>
+        </mat-card-actions>
+    </mat-card>
+    
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="movieTitle">
+            <th mat-header-cell *matHeaderCellDef>
+                <i class="fa-solid fa-film"></i> Movie Title
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.movie.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="genre">
+            <th mat-header-cell *matHeaderCellDef class="hide-600">
+                <i class="fa-solid fa-masks-theater"></i> Genre
+            </th>
+            <td mat-cell *matCellDef="let element" class="hide-600"> {{getGenreDisplayName(element.movie.genre)}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="director">
+            <th mat-header-cell *matHeaderCellDef class="hide-780">
+                <i class="fa-solid fa-user-tie"></i> Director
+            </th>
+            <td mat-cell *matCellDef="let element" class="hide-780"> {{element.movie.director}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="dateTime">
+            <th mat-header-cell *matHeaderCellDef>
+                <i class="fa-solid fa-calendar-clock"></i> Show Time
+            </th>
+            <td mat-cell *matCellDef="let element"> {{formatDateTime(element.projection.dateTime)}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef>
+                <i class="fa-solid fa-dollar-sign"></i> Price
+            </th>
+            <td mat-cell *matCellDef="let element"> {{formatPrice(element.projection.price)}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>
+                <i class="fa-solid fa-location-arrow"></i> Actions
+            </th>
+            <td mat-cell *matCellDef="let element">
+                <a mat-button [routerLink]="['/movies', element.movie.id, 'projections', element.projection.id]">
+                    <i class="fa-solid fa-ticket"></i>
+                    <span class="link-name hide-780">Book Tickets</span>
+                </a>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <p *ngIf="dataSource.length == 0">No movie projections found matching the search criteria!</p>
+</div>
+
+<app-loading *ngIf="!dataSource" /> 
