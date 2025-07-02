@@ -108,15 +108,32 @@ export class MovieDetailsComponent implements OnInit {
 
     this.cartService.create(cartItem).subscribe({
       next: (createdItem) => {
-        this.snackBar.open('Uspešno dodato u korpu!', 'Zatvori', {
-          duration: 3000
+        Swal.fire({
+          title: 'Success!',
+          text: 'Successfully added to cart!',
+          icon: 'success',
+          customClass: {
+            popup: 'bg-dark'
+          },
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "OK"
+        }).then(() => {
+          // Navigate to user profile to see the cart
+          this.router.navigate(['/user']);
         });
-        // Navigate to user profile to see the cart
-        this.router.navigate(['/user']);
       },
       error: (error) => {
-        this.snackBar.open('Greška pri dodavanju u korpu', 'Zatvori', {
-          duration: 3000
+        console.error('Error adding to cart:', error);
+        const errorMessage = error.message || 'Error adding to cart';
+        Swal.fire({
+          title: 'Error!',
+          text: errorMessage,
+          icon: 'error',
+          customClass: {
+            popup: 'bg-dark'
+          },
+          confirmButtonColor: "#d33",
+          confirmButtonText: "OK"
         });
         }
       });

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { CartItem, CartItemStatus } from '../../models/cinema/cart-item.model';
 
 @Injectable({
@@ -40,8 +40,19 @@ export class CartItemService {
   create(cartItem: CartItem): Observable<CartItem> {
     const cartItems = CartItemService.retrieveCartItems();
     
+    // Check if user already has a booking for this projection (that's not cancelled)
+    const existingBooking = cartItems.find(item => 
+      item.userId === cartItem.userId && 
+      item.projectionId === cartItem.projectionId &&
+      item.status !== CartItemStatus.CANCELLED
+    );
+    
+    if (existingBooking) {
+      return throwError(() => new Error('You have already booked this projection'));
+    }
+    
     cartItem.id = CartItemService.lastCartItemId++;
-    cartItem.status = CartItemStatus.BOOKED; // 'rezervisano'
+    cartItem.status = CartItemStatus.BOOKED;
     cartItem.bookedAt = new Date();
     
     cartItems.push(cartItem);
