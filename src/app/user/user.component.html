@@ -121,7 +121,7 @@
                         <i class="fa-solid fa-clock"></i> Datum i vreme
                     </th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.projection.dateTime | date:'medium'}}
+                        {{element.projection.dateTime | date:'dd.MM.yyyy HH:mm'}}
                     </td>
                 </ng-container>
 

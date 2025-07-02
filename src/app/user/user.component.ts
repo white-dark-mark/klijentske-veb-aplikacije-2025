@@ -16,7 +16,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { CartItemService } from '../../services/cinema/cart-item.service';
 import { MovieService } from '../../services/cinema/movie.service';
-import { MovieProjectionService } from '../../services/cinema/movie-projection.service';
 import { MovieReviewService } from '../../services/cinema/movie-review.service';
 import { CartItem, CartItemStatus } from '../../models/cinema/cart-item.model';
 import { Movie } from '../../models/cinema/movie.model';
@@ -63,7 +62,6 @@ export class UserComponent implements OnInit {
     private router: Router,
     private cartService: CartItemService,
     private movieService: MovieService,
-    private projectionService: MovieProjectionService,
     private movieReviewService: MovieReviewService,
     private snackBar: MatSnackBar
   ) {
@@ -98,7 +96,7 @@ export class UserComponent implements OnInit {
     let totalPrice = 0;
 
     this.cartItems.forEach(cartItem => {
-      this.projectionService.getById(cartItem.projectionId).subscribe(projection => {
+      this.movieService.getProjectionById(cartItem.projectionId).subscribe(projection => {
         if (projection) {
           this.movieService.getById(projection.movieId).subscribe(movie => {
             if (movie) {

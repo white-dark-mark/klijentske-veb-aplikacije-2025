@@ -282,4 +282,36 @@ export class MovieService {
     return of(void 0);
   }
 
+  // Projection-specific methods (replacing MovieProjectionService)
+  getAllProjections(): Observable<MovieProjection[]> {
+    return of(this.movieProjections);
+  }
+
+  getProjectionById(id: number): Observable<MovieProjection | undefined> {
+    return of(this.movieProjections.find(p => p.id === id));
+  }
+
+  updateProjection(id: number, projection: MovieProjection): Observable<MovieProjection> {
+    const index = this.movieProjections.findIndex(p => p.id === id);
+    if (index !== -1) {
+      this.movieProjections[index] = { ...projection, id };
+      
+      // Update the movie's projections array as well
+      const movie = this.movies.find(m => m.id === projection.movieId);
+      if (movie && movie.projections) {
+        const movieProjectionIndex = movie.projections.findIndex(p => p.id === id);
+        if (movieProjectionIndex !== -1) {
+          movie.projections[movieProjectionIndex] = { ...projection, id };
+        }
+      }
+      
+      return of(this.movieProjections[index]);
+    }
+    return of(projection);
+  }
+
+  deleteProjection(id: number): Observable<void> {
+    return this.removeProjection(id);
+  }
+
 } 
