@@ -15,7 +15,7 @@ export class UserService {
                     lastName: 'User',
                     phone: '+3816123456789',
                     address: 'Mokroluska 14, Vozdovac',
-                    favouriteDestination: 'Banja Luka',
+                    favouriteGenre: 'Banja Luka',
                     password: 'user123',
                     role: UserRole.WATCHER,
                     orders: []
@@ -51,7 +51,7 @@ export class UserService {
                 u.lastName = model.lastName
                 u.address = model.address
                 u.phone = model.phone
-                u.favouriteDestination = model.favouriteDestination
+                u.favouriteGenre = model.favouriteGenre
             }
         }
 

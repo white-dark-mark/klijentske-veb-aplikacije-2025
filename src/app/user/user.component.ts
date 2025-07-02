@@ -19,10 +19,9 @@ import { CartItemService } from '../../services/cinema/cart-item.service';
 import { MovieService } from '../../services/cinema/movie.service';
 import { MovieReviewService } from '../../services/cinema/movie-review.service';
 import { CartItem, CartItemStatus } from '../../models/cinema/cart-item.model';
-import { Movie } from '../../models/cinema/movie.model';
+import { Movie, MovieGenre } from '../../models/cinema/movie.model';
 import { MovieProjection } from '../../models/cinema/movie-projection.model';
 import { MovieReview } from '../../models/cinema/movie-review.model';
-import { FlightService } from '../../services/flight.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -50,7 +49,17 @@ export class UserComponent implements OnInit {
   public displayedColumns: string[] = ['movie', 'projection', 'dateTime', 'price', 'status', 'averageRating', 'rating', 'actions'];
   public user: UserModel | null = null
   public userCopy: UserModel | null = null
-  public destinationList: string[] = []
+  public genreList: {value: MovieGenre, label: string}[] = [
+    { value: MovieGenre.ACTION, label: 'Action' },
+    { value: MovieGenre.ANIMATION, label: 'Animation' },
+    { value: MovieGenre.COMEDY, label: 'Comedy' },
+    { value: MovieGenre.DOCUMENTARY, label: 'Documentary' },
+    { value: MovieGenre.DRAMA, label: 'Drama' },
+    { value: MovieGenre.HORROR, label: 'Horror' },
+    { value: MovieGenre.ROMANCE, label: 'Romance' },
+    { value: MovieGenre.SCIFI, label: 'Sci-Fi' },
+    { value: MovieGenre.THRILLER, label: 'Thriller' }
+  ]
   public cartItems: CartItem[] = []
   public cartItemsWithDetails: any[] = []
   public totalPrice: number = 0
@@ -75,8 +84,6 @@ export class UserComponent implements OnInit {
 
     this.user = UserService.getActiveUser()
     this.userCopy = UserService.getActiveUser()
-    FlightService.getDestinations()
-      .then(rsp => this.destinationList = rsp.data)
   }
 
   ngOnInit(): void {
@@ -269,6 +276,14 @@ export class UserComponent implements OnInit {
 
   public roundRating(rating: number): number {
     return Math.round(rating);
+  }
+
+  public formatGenre(genre?: string): string {
+    console.log(genre)
+    if (!genre) return 'Not selected';
+    
+    const genreItem = this.genreList.find(g => g.value === genre);
+    return genreItem ? genreItem.label : genre;
   }
 
 

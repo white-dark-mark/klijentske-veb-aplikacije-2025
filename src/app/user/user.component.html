@@ -6,7 +6,7 @@
             <mat-card-title>{{user.firstName}} {{user.lastName}}</mat-card-title>
             <mat-card-subtitle>
                 <p class="no-border">Total orders: {{user.orders.length}}</p>
-                <p class="no-border">Destination: {{user.favouriteDestination}}</p>
+                <p class="no-border">Favorite Genre: {{formatGenre(user.favouriteGenre)}}</p>
             </mat-card-subtitle>
         </mat-card-header>
         <mat-card-content class="user-card-content">
@@ -60,10 +60,10 @@
                         <input matInput type="text" [(ngModel)]="userCopy.address" />
                     </mat-form-field>
                     <mat-form-field class="full-width">
-                        <mat-label>Select Favourite Destination</mat-label>
-                        <mat-select [(ngModel)]="userCopy.favouriteDestination">
-                            <mat-option *ngFor="let dest of destinationList" [value]="dest">
-                                {{dest}}
+                        <mat-label>Select Favorite Movie Genre</mat-label>
+                        <mat-select [(ngModel)]="userCopy.favouriteGenre">
+                            <mat-option *ngFor="let genre of genreList" [value]="genre.value">
+                                {{genre.label}}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>

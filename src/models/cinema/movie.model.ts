@@ -1,15 +1,15 @@
 import { MovieProjection } from './movie-projection.model';
 
 export enum MovieGenre {
-  COMEDY = 'comedy',
-  THRILLER = 'thriller',
-  ACTION = 'action',
-  DRAMA = 'drama',
-  HORROR = 'horror',
-  ROMANCE = 'romance',
-  SCIFI = 'sci-fi',
-  DOCUMENTARY = 'documentary',
-  ANIMATION = 'animation'
+  COMEDY = 'Comedy',
+  THRILLER = 'Thriller',
+  ACTION = 'Action',
+  DRAMA = 'Drama',
+  HORROR = 'Horror',
+  ROMANCE = 'Romance',
+  SCIFI = 'Sci-Fi',
+  DOCUMENTARY = 'Documentary',
+  ANIMATION = 'Animation'
 }
 
 export interface Movie {

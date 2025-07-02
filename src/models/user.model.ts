@@ -12,7 +12,7 @@ export interface UserModel {
     lastName: string
     phone: string
     address: string
-    favouriteDestination: string
+    favouriteGenre: string
     password: string
     role: UserRole
     orders: OrderModel[]

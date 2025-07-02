@@ -32,10 +32,10 @@
             <input type="password" matInput placeholder="Repeat your password..." [(ngModel)]="repeatPassword">
         </mat-form-field>
         <mat-form-field class="full-width">
-            <mat-label>Select Favourite Destination</mat-label>
-            <mat-select [(ngModel)]="destination">
-                <mat-option *ngFor="let dest of destinationList" [value]="dest">
-                    {{dest}}
+            <mat-label>Select Favorite Movie Genre</mat-label>
+            <mat-select [(ngModel)]="favoriteGenre">
+                <mat-option *ngFor="let genre of genreList" [value]="genre.value">
+                    {{genre.label}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
