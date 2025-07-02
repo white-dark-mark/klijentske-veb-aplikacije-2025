@@ -102,13 +102,48 @@
 
                 <ng-container matColumnDef="movie">
                     <th mat-header-cell *matHeaderCellDef>
-                        <i class="fa-solid fa-film"></i> Movie
+                        <i class="fa-solid fa-film"></i> Movie Details
                     </th>
                     <td mat-cell *matCellDef="let element">
-                        <div>
-                            <strong>{{element.movie.name}}</strong><br>
-                            <small>{{element.movie.genre}} | {{element.movie.duration}} min</small><br>
-                            <small>Director: {{element.movie.director}}</small>
+                        <div class="movie-details-card">
+                            <div class="movie-title">
+                                <strong>{{element.movie.name}}</strong>
+                            </div>
+                            <div class="movie-info-row">
+                                <span class="info-item">
+                                    <i class="fa-solid fa-masks-theater"></i>
+                                    <strong>Genre:</strong> {{formatGenre(element.movie.genre)}}
+                                </span>
+                            </div>
+                            <div class="movie-info-row">
+                                <span class="info-item">
+                                    <i class="fa-solid fa-clock"></i>
+                                    <strong>Duration:</strong> {{element.movie.duration}} min
+                                </span>
+                            </div>
+                            <div class="movie-info-row">
+                                <span class="info-item">
+                                    <i class="fa-solid fa-user-tie"></i>
+                                    <strong>Director:</strong> {{element.movie.director}}
+                                </span>
+                            </div>
+                            <div class="movie-info-row">
+                                <span class="info-item">
+                                    <i class="fa-solid fa-calendar"></i>
+                                    <strong>Release:</strong> {{element.movie.releaseDate | date:'dd.MM.yyyy'}}
+                                </span>
+                            </div>
+                            <div class="movie-info-row">
+                                <span class="info-item">
+                                    <i class="fa-solid fa-users"></i>
+                                    <strong>Cast:</strong>
+                                </span>
+                            </div>
+                            <div class="cast-list">
+                                <span *ngFor="let actor of element.movie.actors; let i = index">
+                                    {{actor}}<span *ngIf="i < element.movie.actors.length - 1">, </span>
+                                </span>
+                            </div>
                         </div>
                     </td>
                 </ng-container>
