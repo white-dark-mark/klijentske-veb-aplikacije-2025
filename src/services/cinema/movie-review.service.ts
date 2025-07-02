@@ -58,6 +58,13 @@ export class MovieReviewService {
     }
 
     const reviews = JSON.parse(localStorage.getItem('movieReviews')!);
+    
+    // Update lastReviewId to ensure unique IDs
+    if (reviews.length > 0) {
+      const maxId = Math.max(...reviews.map((review: MovieReview) => review.id));
+      MovieReviewService.lastReviewId = maxId + 1;
+    }
+    
     // Convert string dates back to Date objects
     return reviews.map((review: MovieReview) => ({
       ...review,

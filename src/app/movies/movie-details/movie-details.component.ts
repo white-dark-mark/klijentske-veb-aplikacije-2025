@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MovieService } from '../../../services/cinema/movie.service';
 import { MovieReviewService } from '../../../services/cinema/movie-review.service';
 import { CartItemService } from '../../../services/cinema/cart-item.service';
@@ -11,11 +11,12 @@ import { MovieReview } from '../../../models/cinema/movie-review.model';
 import { CartItemStatus } from '../../../models/cinema/cart-item.model';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-movie-details',
   standalone: true,
-  imports: [CommonModule, MatButtonModule],
+  imports: [CommonModule, MatButtonModule, RouterLink],
   templateUrl: './movie-details.component.html',
   styleUrls: ['./movie-details.component.css']
 })
@@ -66,6 +67,22 @@ export class MovieDetailsComponent implements OnInit {
   }
 
   bookProjection(): void {
+    Swal.fire({
+      title: `Place an order to ${this.movie?.name}?`,
+      text: "Orders can be canceled any time from your user profile!",
+      icon: "warning",
+      showCancelButton: true,
+      customClass: {
+        popup: 'bg-dark'
+      },
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, place an order!"
+    }).then((result) => {
+      if (!result.isConfirmed) {
+        // User cancelled, just return without error message
+        return;
+      }
     const user = UserService.getActiveUser();
     if (!user) {
       this.snackBar.open('Please log in to book tickets', 'Close', {
@@ -90,19 +107,19 @@ export class MovieDetailsComponent implements OnInit {
     };
 
     this.cartService.create(cartItem).subscribe({
-      next: () => {
-        this.snackBar.open('Successfully added to cart!', 'Close', {
+      next: (createdItem) => {
+        this.snackBar.open('Uspešno dodato u korpu!', 'Zatvori', {
           duration: 3000
         });
-        // Optionally navigate to cart page
-        // this.router.navigate(['/cart']);
+        // Navigate to user profile to see the cart
+        this.router.navigate(['/user']);
       },
       error: (error) => {
-        this.snackBar.open('Error adding to cart', 'Close', {
+        this.snackBar.open('Greška pri dodavanju u korpu', 'Zatvori', {
           duration: 3000
         });
-        console.error('Error adding to cart:', error);
-      }
+        }
+      });
     });
   }
 } 

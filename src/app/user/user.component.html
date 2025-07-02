@@ -75,74 +75,62 @@
         </mat-card-content>
     </mat-card>
 
-    <mat-card appearance="outlined" *ngIf="user.orders.length == 0" class="no-order">
+    <mat-card appearance="outlined" *ngIf="cartItems.length == 0" class="no-order">
         <mat-card-content>
-            <h1>You have no orders yet!</h1>
-            <p>To place an order visit the <a routerLink="/searh" class="cyan">search page</a></p>
+            <h1>Nemate rezervisanih projekcija!</h1>
+            <p>Da rezervišete projekcije idite na <a routerLink="/movies" class="cyan">filmovi</a></p>
         </mat-card-content>
     </mat-card>
 
-    <div *ngIf="user.orders.length > 0">
-        <div *ngIf="user.orders">
-            <h1>Order List</h1>
-            <table mat-table [dataSource]="user.orders" class="mat-elevation-z8">
+    <div *ngIf="cartItems.length > 0" class="cart-container">
+        <mat-card class="user-card" appearance="outlined">
+            <mat-card-header>
+                <h1>Korpa projekcija</h1>
+            </mat-card-header>
+            <mat-card-content>
+                <p class="total-price">Ukupna cena: <strong>{{ totalPrice }} RSD</strong></p>
+            </mat-card-content>
+        </mat-card>
+        <div *ngIf="cartItemsWithDetails.length > 0" class="cart-table-container">
+            <table mat-table [dataSource]="cartItemsWithDetails" class="mat-elevation-z8">
 
-                <ng-container matColumnDef="id">
-                    <th mat-header-cell *matHeaderCellDef class="id">
-                        <i class="fa-solid fa-hashtag"></i> ID
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="id"> {{element.flightId}} </td>
-                </ng-container>
-
-                <ng-container matColumnDef="destination">
+                <ng-container matColumnDef="movie">
                     <th mat-header-cell *matHeaderCellDef>
-                        <i class="fa-solid fa-map-location-dot"></i> Destination
+                        <i class="fa-solid fa-film"></i> Film
                     </th>
-                    <td mat-cell *matCellDef="let element"> {{element.destination}} </td>
-                </ng-container>
-
-                <ng-container matColumnDef="flightNumber">
-                    <th mat-header-cell *matHeaderCellDef class="number">
-                        <i class="fa-solid fa-plane-circle-exclamation"></i> Flight Number
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="number">
-                        {{element.flightNumber}}
+                    <td mat-cell *matCellDef="let element">
+                        <div>
+                            <strong>{{element.movie.name}}</strong><br>
+                            <small>{{element.movie.genre}} | {{element.movie.duration}} min</small><br>
+                            <small>Režija: {{element.movie.director}}</small>
+                        </div>
                     </td>
                 </ng-container>
 
-                <ng-container matColumnDef="airline">
-                    <th mat-header-cell *matHeaderCellDef class="airline">
-                        <i class="fa-solid fa-plane"></i> Airline
+                <ng-container matColumnDef="projection">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <i class="fa-solid fa-calendar"></i> Projekcija
                     </th>
-                    <td mat-cell *matCellDef="let element" class="airline">
-                        {{element.airline.name}}
+                    <td mat-cell *matCellDef="let element">
+                        ID: {{element.projection.id}}
                     </td>
                 </ng-container>
 
-                <ng-container matColumnDef="count">
-                    <th mat-header-cell *matHeaderCellDef class="count">
-                        <i class="fa-solid fa-arrow-up-wide-short"></i> Count
+                <ng-container matColumnDef="dateTime">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <i class="fa-solid fa-clock"></i> Datum i vreme
                     </th>
-                    <td mat-cell *matCellDef="let element" class="count">
-                        {{element.count}}
+                    <td mat-cell *matCellDef="let element">
+                        {{element.projection.dateTime | date:'medium'}}
                     </td>
                 </ng-container>
 
                 <ng-container matColumnDef="price">
                     <th mat-header-cell *matHeaderCellDef class="price">
-                        <i class="fa-solid fa-tag"></i> Price Per Ticket
+                        <i class="fa-solid fa-tag"></i> Cena
                     </th>
                     <td mat-cell *matCellDef="let element" class="price">
-                        {{element.pricePerItem}} <i class="fa-solid fa-euro-sign"></i>
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="total">
-                    <th mat-header-cell *matHeaderCellDef class="total">
-                        <i class="fa-solid fa-hand-holding-dollar"></i> Total
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="total">
-                        {{element.pricePerItem*element.count}} <i class="fa-solid fa-euro-sign"></i>
+                        {{element.projection.price}} RSD
                     </td>
                 </ng-container>
 
@@ -151,52 +139,65 @@
                         <i class="fa-regular fa-chart-bar"></i> Status
                     </th>
                     <td mat-cell *matCellDef="let element">
-                        <div *ngIf="element.status == 'paid' && element.rating == null">
-                            Paid
+                        <span [ngClass]="'status-' + element.cartItem.status">
+                            {{element.cartItem.status}}
+                        </span>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="rating">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <i class="fa-solid fa-star"></i> Ocena
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <div *ngIf="(element.cartItem.status === 'gledano' || element.cartItem.status === 'WATCHED') && element.cartItem.rating">
+                            {{getStarRating(element.cartItem.rating)}}
                         </div>
-                        <div *ngIf="element.status == 'paid' && element.rating == true">
-                            Liked
+                        <div *ngIf="(element.cartItem.status === 'gledano' || element.cartItem.status === 'WATCHED') && !element.cartItem.rating">
+                            <span class="rate-buttons">
+                                <button mat-icon-button *ngFor="let star of [1,2,3,4,5]" 
+                                        (click)="rateProjection(element.cartItem, star)"
+                                        class="star-button">
+                                    <mat-icon>star_border</mat-icon>
+                                </button>
+                            </span>
                         </div>
-                        <div *ngIf="element.status == 'paid' && element.rating == false">
-                            Disliked
-                        </div>
-                        <div *ngIf="element.status == 'ordered'">
-                            Ordered
-                        </div>
-                        <div *ngIf="element.status == 'canceled'">
-                            Canceled
+                        <div *ngIf="element.cartItem.status !== 'gledano' && element.cartItem.status !== 'WATCHED'">
+                            -
                         </div>
                     </td>
                 </ng-container>
 
                 <ng-container matColumnDef="actions">
                     <th mat-header-cell *matHeaderCellDef>
-                        <i class="fa-solid fa-location-arrow"></i> Actions
+                        <i class="fa-solid fa-location-arrow"></i> Akcije
                     </th>
-                    <td mat-cell *matCellDef="let element" class="actions">
-                        <a mat-button [routerLink]="['/details/', element.flightId]">
-                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                            <span class="link-name">Details</span>
-                        </a>
-                        <div *ngIf="element.status == 'ordered'">
-                            <button type="button" mat-button (click)="doPay(element)">
-                                <i class="fa-solid fa-cart-shopping"></i>
-                                <span class="link-name">Pay</span>
-                            </button>
-                            <button type="button" mat-button (click)="doCancel(element)">
-                                <i class="fa-solid fa-ban"></i>
-                                <span class="link-name">Cancel</span>
-                            </button>
-                        </div>
-                        <div *ngIf="element.status == 'paid' && element.rating == null">
-                            <button type="button" mat-button (click)="doRating(element, true)">
-                                <i class="fa-solid fa-thumbs-up"></i>
-                                <span class="link-name">Like</span>
-                            </button>
-                            <button type="button" mat-button (click)="doRating(element, false)">
-                                <i class="fa-solid fa-thumbs-down"></i>
-                                <span class="link-name">Dislike</span>
-                            </button>
+                    <td mat-cell *matCellDef="let element">
+                        <div class="movie-details-actions">
+                            <a mat-button [routerLink]="['/movies/details/', element.movie.id, element.projection.id]">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                <span class="link-name">Detalji</span>
+                            </a>
+                            
+                            <div class="action-buttons">
+                                <div *ngIf="element.cartItem.status === 'rezervisano' || element.cartItem.status === 'BOOKED'">
+                                    <button type="button" mat-button color="primary" (click)="markAsWatched(element.cartItem)">
+                                        <mat-icon>visibility</mat-icon>
+                                        Gledano
+                                    </button>
+                                    <button type="button" mat-button color="warn" (click)="cancelProjection(element.cartItem)">
+                                        <mat-icon>cancel</mat-icon>
+                                        Otkaži
+                                    </button>
+                                </div>
+                                
+                                <div *ngIf="element.cartItem.status === 'gledano' || element.cartItem.status === 'WATCHED'">
+                                    <button type="button" mat-button color="accent" (click)="deleteFromCart(element.cartItem)">
+                                        <mat-icon>delete</mat-icon>
+                                        Ukloni
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </td>
                 </ng-container>
