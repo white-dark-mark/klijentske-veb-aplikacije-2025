@@ -5,8 +5,14 @@
             <img mat-card-avatar class="example-header-image" [src]="['https://ui-avatars.com/api/?name='+user.email]">
             <mat-card-title>{{user.firstName}} {{user.lastName}}</mat-card-title>
             <mat-card-subtitle>
-                <p class="no-border">Total orders: {{user.orders.length}}</p>
-                <p class="no-border">Favorite Genre: {{formatGenre(user.favouriteGenre)}}</p>
+                <div class="user-info-grid">
+                    <p class="no-border"><i class="fa-solid fa-envelope"></i> <strong>Email:</strong> {{user.email}}</p>
+                    <p class="no-border"><i class="fa-solid fa-phone"></i> <strong>Phone:</strong> {{user.phone || 'Not provided'}}</p>
+                    <p class="no-border"><i class="fa-solid fa-map-marker-alt"></i> <strong>Address:</strong> {{user.address || 'Not provided'}}</p>
+                    <p class="no-border"><i class="fa-solid fa-film"></i> <strong>Favorite Genre:</strong> {{formatGenre(user.favouriteGenre)}}</p>
+                    <p class="no-border"><i class="fa-solid fa-shopping-cart"></i> <strong>Total Orders:</strong> {{user.orders.length}}</p>
+                    <p class="no-border"><i class="fa-solid fa-user-tag"></i> <strong>Role:</strong> {{getCurrentUserRole()}}</p>
+                </div>
             </mat-card-subtitle>
         </mat-card-header>
         <mat-card-content class="user-card-content">

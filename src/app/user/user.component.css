@@ -84,6 +84,44 @@
     padding: 0;
 }
 
+/* User info grid styling */
+.user-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.user-info-grid p {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: white;
+}
+
+.user-info-grid p i {
+    width: 16px;
+    text-align: center;
+    color: white;
+}
+
+.user-info-grid p strong {
+    color: white;
+}
+
+/* Responsive design for user info */
+@media only screen and (max-width: 768px) {
+    .user-info-grid {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+    
+    .user-info-grid p {
+        font-size: 13px;
+    }
+}
+
 /* Cart-specific styles */
 .cart-container {
     width: 100%;
