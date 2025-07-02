@@ -1,5 +1,10 @@
 import { OrderModel } from "./order.model"
 
+export enum UserRole {
+    WATCHER = 'watcher',
+    ADMIN = 'admin'
+}
+
 export interface UserModel {
     id: number;
     email: string
@@ -9,5 +14,6 @@ export interface UserModel {
     address: string
     favouriteDestination: string
     password: string
+    role: UserRole
     orders: OrderModel[]
 }

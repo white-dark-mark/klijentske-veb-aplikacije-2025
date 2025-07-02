@@ -213,11 +213,94 @@ export class MovieService {
   ];
 
   constructor() {
+    this.initializeProjections();
     // Populate projections for each movie
     this.movies = this.movies.map(movie => ({
       ...movie,
       projections: this.movieProjections.filter(p => p.movieId === movie.id)
     }));
+  }
+
+  private initializeProjections(): void {
+    const storedProjections = localStorage.getItem('movieProjections');
+    
+    if (storedProjections) {
+      // Load existing projections from localStorage
+      console.log('📽️ Loading existing movie projections from localStorage...');
+      const parsed = JSON.parse(storedProjections);
+      this.movieProjections = parsed.map((p: any) => ({
+        ...p,
+        dateTime: new Date(p.dateTime) // Convert string back to Date
+      }));
+      console.log(`✅ Loaded ${this.movieProjections.length} projections from localStorage`);
+    } else {
+      // Generate random future dates and store in localStorage
+      console.log('🎲 No stored projections found. Generating random future dates...');
+      this.generateRandomFutureDates();
+      this.saveProjectionsToLocalStorage();
+      console.log(`✅ Generated and saved ${this.movieProjections.length} new projections`);
+    }
+  }
+
+  private generateRandomFutureDates(): void {
+    const now = new Date();
+    const futureLimit = new Date();
+    futureLimit.setDate(now.getDate() + 90); // 90 days in the future
+    
+    // Movie theater typical hours (14:00 - 23:00)
+    const movieHours = [14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+    const movieMinutes = [0, 15, 30, 45];
+    
+    this.movieProjections = this.movieProjections.map(projection => {
+      // Generate random date between now+1 and now+90 days
+      const randomDays = Math.floor(Math.random() * 90) + 1;
+      const randomDate = new Date();
+      randomDate.setDate(now.getDate() + randomDays);
+      
+      // Set random time
+      const randomHour = movieHours[Math.floor(Math.random() * movieHours.length)];
+      const randomMinute = movieMinutes[Math.floor(Math.random() * movieMinutes.length)];
+      
+      randomDate.setHours(randomHour, randomMinute, 0, 0);
+      
+      return {
+        ...projection,
+        dateTime: randomDate
+      };
+    });
+    
+    // Sort projections by date to make them look more realistic
+    this.movieProjections.sort((a, b) => a.dateTime.getTime() - b.dateTime.getTime());
+    
+    // Reassign IDs to maintain order
+    this.movieProjections.forEach((projection, index) => {
+      projection.id = index + 1;
+    });
+  }
+
+  private saveProjectionsToLocalStorage(): void {
+    localStorage.setItem('movieProjections', JSON.stringify(this.movieProjections));
+  }
+
+  // Method to regenerate projections (useful for testing or reset)
+  public regenerateProjections(): void {
+    console.log('🎬 Regenerating movie projections with new random dates...');
+    this.generateRandomFutureDates();
+    this.saveProjectionsToLocalStorage();
+    
+    // Update movies with new projections
+    this.movies = this.movies.map(movie => ({
+      ...movie,
+      projections: this.movieProjections.filter(p => p.movieId === movie.id)
+    }));
+    
+    console.log('✅ Projections regenerated and saved to localStorage');
+  }
+
+  // Method to clear localStorage projections (force regeneration on next load)
+  public clearStoredProjections(): void {
+    localStorage.removeItem('movieProjections');
+    console.log('🗑️ Cleared stored projections from localStorage');
   }
 
   getAll(): Observable<Movie[]> {
@@ -263,6 +346,9 @@ export class MovieService {
       movie.projections.push(projection);
     }
     
+    // Save to localStorage
+    this.saveProjectionsToLocalStorage();
+    
     return of(projection);
   }
 
@@ -278,6 +364,9 @@ export class MovieService {
       if (movie && movie.projections) {
         movie.projections = movie.projections.filter(p => p.id !== projectionId);
       }
+      
+      // Save to localStorage
+      this.saveProjectionsToLocalStorage();
     }
     return of(void 0);
   }
@@ -304,6 +393,9 @@ export class MovieService {
           movie.projections[movieProjectionIndex] = { ...projection, id };
         }
       }
+      
+      // Save to localStorage
+      this.saveProjectionsToLocalStorage();
       
       return of(this.movieProjections[index]);
     }

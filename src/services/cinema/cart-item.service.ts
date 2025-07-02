@@ -87,7 +87,7 @@ export class CartItemService {
     const cartItems = CartItemService.retrieveCartItems();
     const item = cartItems.find(i => i.id === cartItemId);
     
-    if (item && (item.status === CartItemStatus.WATCHED || item.status === 'WATCHED' || item.status === 'gledano')) {
+    if (item && (item.status === CartItemStatus.WATCHED || item.status === 'WATCHED')) {
       item.rating = rating;
       CartItemService.saveCartItems(cartItems);
     }

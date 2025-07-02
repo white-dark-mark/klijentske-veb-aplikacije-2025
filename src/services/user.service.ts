@@ -1,5 +1,5 @@
 import { OrderModel } from "../models/order.model"
-import { UserModel } from "../models/user.model"
+import { UserModel, UserRole } from "../models/user.model"
 
 export class UserService {
 
@@ -17,6 +17,7 @@ export class UserService {
                     address: 'Mokroluska 14, Vozdovac',
                     favouriteDestination: 'Banja Luka',
                     password: 'user123',
+                    role: UserRole.WATCHER,
                     orders: []
                 }
             ]
@@ -29,6 +30,7 @@ export class UserService {
 
     static createUser(model: UserModel) {
         model.id = this.lastUserId++;
+        model.role = UserRole.WATCHER; // Default role for new users
         const users = this.retrieveUsers()
 
         for (let u of users) {
@@ -143,5 +145,44 @@ export class UserService {
         }
 
         return false
+    }
+
+    // Role-related methods
+    static isCurrentUserAdmin(): boolean {
+        // Check localStorage override first
+        const adminOverride = localStorage.getItem('userRoleOverride');
+        if (adminOverride === 'admin') {
+            console.log('🔑 Admin access granted via localStorage override');
+            return true;
+        }
+
+        // Check user's actual role
+        const activeUser = this.getActiveUser();
+        if (activeUser && activeUser.role === UserRole.ADMIN) {
+            console.log('🔑 Admin access granted via user role');
+            return true;
+        }
+
+        return false;
+    }
+
+    static setAdminOverride(isAdmin: boolean): void {
+        if (isAdmin) {
+            localStorage.setItem('userRoleOverride', 'admin');
+            console.log('🔧 Admin override enabled in localStorage');
+        } else {
+            localStorage.removeItem('userRoleOverride');
+            console.log('🔧 Admin override disabled');
+        }
+    }
+
+    static getCurrentUserRole(): UserRole {
+        const adminOverride = localStorage.getItem('userRoleOverride');
+        if (adminOverride === 'admin') {
+            return UserRole.ADMIN;
+        }
+
+        const activeUser = this.getActiveUser();
+        return activeUser?.role || UserRole.WATCHER;
     }
 }

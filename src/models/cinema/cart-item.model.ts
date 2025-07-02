@@ -8,7 +8,7 @@ export interface CartItem {
 }
 
 export enum CartItemStatus {
-    BOOKED = 'rezervisano',
-    WATCHED = 'gledano', 
-    CANCELLED = 'otkazano'
+    BOOKED = 'BOOKED',
+    WATCHED = 'WATCHED', 
+    CANCELLED = 'CANCELLED'
 } 

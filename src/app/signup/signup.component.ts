@@ -9,6 +9,7 @@ import { FlightService } from '../../services/flight.service';
 import { MatSelectModule } from '@angular/material/select';
 import { NgFor } from '@angular/common';
 import { UserService } from '../../services/user.service';
+import { UserRole } from '../../models/user.model';
 
 @Component({
   selector: 'app-signup',
@@ -53,6 +54,7 @@ export class SignupComponent {
       phone: this.phone,
       address: this.address,
       favouriteDestination: this.destination,
+      role: UserRole.WATCHER, // Will be overridden by UserService.createUser
       orders: []
     })
 

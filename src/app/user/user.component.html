@@ -30,7 +30,7 @@
                         <input matInput type="password" [(ngModel)]="repeatPasswordValue" />
                     </mat-form-field>
                     <button mat-button (click)="doChangePassword()">
-                        <i class="fa-solid fa-paper-plane"></i> Sumbit
+                        <i class="fa-solid fa-paper-plane"></i> Submit
                     </button>
                 </mat-expansion-panel>
                 <mat-expansion-panel *ngIf="userCopy">
@@ -77,18 +77,18 @@
 
     <mat-card appearance="outlined" *ngIf="cartItems.length == 0" class="no-order">
         <mat-card-content>
-            <h1>Nemate rezervisanih projekcija!</h1>
-            <p>Da rezervišete projekcije idite na <a routerLink="/movies" class="cyan">filmovi</a></p>
+            <h1>You have no reserved projections!</h1>
+            <p>To reserve projections go to <a routerLink="/movies" class="cyan">movies</a></p>
         </mat-card-content>
     </mat-card>
 
     <div *ngIf="cartItems.length > 0" class="cart-container">
         <mat-card class="user-card" appearance="outlined">
             <mat-card-header>
-                <h1>Korpa projekcija</h1>
+                <h1>Projection Cart</h1>
             </mat-card-header>
             <mat-card-content>
-                <p class="total-price">Ukupna cena: <strong>{{ totalPrice }} RSD</strong></p>
+                <p class="total-price">Total Price: <strong>{{ totalPrice }} RSD</strong></p>
             </mat-card-content>
         </mat-card>
         <div *ngIf="cartItemsWithDetails.length > 0" class="cart-table-container">
@@ -96,20 +96,20 @@
 
                 <ng-container matColumnDef="movie">
                     <th mat-header-cell *matHeaderCellDef>
-                        <i class="fa-solid fa-film"></i> Film
+                        <i class="fa-solid fa-film"></i> Movie
                     </th>
                     <td mat-cell *matCellDef="let element">
                         <div>
                             <strong>{{element.movie.name}}</strong><br>
                             <small>{{element.movie.genre}} | {{element.movie.duration}} min</small><br>
-                            <small>Režija: {{element.movie.director}}</small>
+                            <small>Director: {{element.movie.director}}</small>
                         </div>
                     </td>
                 </ng-container>
 
                 <ng-container matColumnDef="projection">
                     <th mat-header-cell *matHeaderCellDef>
-                        <i class="fa-solid fa-calendar"></i> Projekcija
+                        <i class="fa-solid fa-calendar"></i> Projection
                     </th>
                     <td mat-cell *matCellDef="let element">
                         ID: {{element.projection.id}}
@@ -118,7 +118,7 @@
 
                 <ng-container matColumnDef="dateTime">
                     <th mat-header-cell *matHeaderCellDef>
-                        <i class="fa-solid fa-clock"></i> Datum i vreme
+                        <i class="fa-solid fa-clock"></i> Date and Time
                     </th>
                     <td mat-cell *matCellDef="let element">
                         {{element.projection.dateTime | date:'dd.MM.yyyy HH:mm'}}
@@ -127,7 +127,7 @@
 
                 <ng-container matColumnDef="price">
                     <th mat-header-cell *matHeaderCellDef class="price">
-                        <i class="fa-solid fa-tag"></i> Cena
+                        <i class="fa-solid fa-tag"></i> Price
                     </th>
                     <td mat-cell *matCellDef="let element" class="price">
                         {{element.projection.price}} RSD
@@ -145,24 +145,47 @@
                     </td>
                 </ng-container>
 
-                <ng-container matColumnDef="rating">
+                                <ng-container matColumnDef="averageRating">
                     <th mat-header-cell *matHeaderCellDef>
-                        <i class="fa-solid fa-star"></i> Ocena
+                        <i class="fa-solid fa-chart-line"></i> Movie Avg
                     </th>
                     <td mat-cell *matCellDef="let element">
-                        <div *ngIf="(element.cartItem.status === 'gledano' || element.cartItem.status === 'WATCHED') && element.cartItem.rating">
-                            {{getStarRating(element.cartItem.rating)}}
+                        <div style="text-align: center;">
+                            <div *ngIf="element.movieReviewCount > 0">
+                                {{getStarRating(roundRating(element.movieAverageRating))}} 
+                                <br><small>{{element.movieAverageRating}}/5</small>
+                                <br><small>({{element.movieReviewCount}} reviews)</small>
+                            </div>
+                            <div *ngIf="element.movieReviewCount === 0">
+                                <small>No reviews yet</small>
+                            </div>
                         </div>
-                        <div *ngIf="(element.cartItem.status === 'gledano' || element.cartItem.status === 'WATCHED') && !element.cartItem.rating">
-                            <span class="rate-buttons">
-                                <button mat-icon-button *ngFor="let star of [1,2,3,4,5]" 
-                                        (click)="rateProjection(element.cartItem, star)"
-                                        class="star-button">
-                                    <mat-icon>star_border</mat-icon>
-                                </button>
-                            </span>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="rating">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <i class="fa-solid fa-star"></i> Your Rating
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <div *ngIf="(element.cartItem.status === 'WATCHED') && element.cartItem.rating">
+                            <div style="text-align: center;">
+                                {{getStarRating(element.cartItem.rating)}}
+                            </div>
                         </div>
-                        <div *ngIf="element.cartItem.status !== 'gledano' && element.cartItem.status !== 'WATCHED'">
+                        <div *ngIf="(element.cartItem.status === 'WATCHED') && !element.cartItem.rating">
+                             <div style="text-align: center;">
+                                 <div><small><strong>Rate this movie:</strong></small></div>
+                                 <span class="rate-buttons">
+                                     <button mat-icon-button *ngFor="let star of [1,2,3,4,5]" 
+                                             (click)="rateProjection(element.cartItem, star)"
+                                             class="star-button">
+                                         <mat-icon>star_border</mat-icon>
+                                     </button>
+                                 </span>
+                             </div>
+                        </div>
+                        <div *ngIf="element.cartItem.status !== 'WATCHED'">
                             -
                         </div>
                     </td>
@@ -170,31 +193,31 @@
 
                 <ng-container matColumnDef="actions">
                     <th mat-header-cell *matHeaderCellDef>
-                        <i class="fa-solid fa-location-arrow"></i> Akcije
+                        <i class="fa-solid fa-location-arrow"></i> Actions
                     </th>
                     <td mat-cell *matCellDef="let element">
                         <div class="movie-details-actions">
                             <a mat-button [routerLink]="['/movies/details/', element.movie.id, element.projection.id]">
                                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                                <span class="link-name">Detalji</span>
+                                <span class="link-name">Details</span>
                             </a>
                             
                             <div class="action-buttons">
-                                <div *ngIf="element.cartItem.status === 'rezervisano' || element.cartItem.status === 'BOOKED'">
+                                <div *ngIf="element.cartItem.status === 'BOOKED'">
                                     <button type="button" mat-button color="primary" (click)="markAsWatched(element.cartItem)">
                                         <mat-icon>visibility</mat-icon>
-                                        Gledano
+                                        Watched
                                     </button>
                                     <button type="button" mat-button color="warn" (click)="cancelProjection(element.cartItem)">
                                         <mat-icon>cancel</mat-icon>
-                                        Otkaži
+                                        Cancel
                                     </button>
                                 </div>
                                 
-                                <div *ngIf="element.cartItem.status === 'gledano' || element.cartItem.status === 'WATCHED'">
+                                <div *ngIf="element.cartItem.status === 'WATCHED'">
                                     <button type="button" mat-button color="accent" (click)="deleteFromCart(element.cartItem)">
                                         <mat-icon>delete</mat-icon>
-                                        Ukloni
+                                        Remove
                                     </button>
                                 </div>
                             </div>
@@ -206,5 +229,26 @@
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
         </div>
+    </div>
+
+    <!-- User Role Section -->
+    <div class="role-section">
+        <h3>👤 User Role: {{ getCurrentUserRole() }}</h3>
+        <p>Current access level and permissions</p>
+        <button mat-raised-button 
+                color="accent" 
+                (click)="toggleAdminMode()"
+                [style.margin-bottom]="'10px'">
+            {{ isAdmin() ? '🔒 Disable Admin Mode' : '🔑 Enable Admin Mode' }}
+        </button>
+    </div>
+
+    <!-- Testing/Development Section (Admin Only) -->
+    <div class="testing-section" *ngIf="isAdmin()">
+        <h3>🧪 Admin Testing Options</h3>
+        <p>Development tools for testing projection dates (Admin only):</p>
+        <button mat-raised-button color="warn" (click)="regenerateProjections()">
+            🎲 Regenerate Random Projection Dates
+        </button>
     </div>
 </div>

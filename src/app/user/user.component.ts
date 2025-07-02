@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
+import { UserRole } from '../../models/user.model';
 import { Router, RouterLink } from '@angular/router';
 import { NgFor, NgIf } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -46,7 +47,7 @@ import Swal from 'sweetalert2';
   styleUrl: './user.component.css'
 })
 export class UserComponent implements OnInit {
-  public displayedColumns: string[] = ['movie', 'projection', 'dateTime', 'price', 'status', 'rating', 'actions'];
+  public displayedColumns: string[] = ['movie', 'projection', 'dateTime', 'price', 'status', 'averageRating', 'rating', 'actions'];
   public user: UserModel | null = null
   public userCopy: UserModel | null = null
   public destinationList: string[] = []
@@ -100,14 +101,24 @@ export class UserComponent implements OnInit {
         if (projection) {
           this.movieService.getById(projection.movieId).subscribe(movie => {
             if (movie) {
-              const itemWithDetails = {
-                cartItem: cartItem,
-                movie: movie,
-                projection: projection
-              };
-              this.cartItemsWithDetails.push(itemWithDetails);
-              totalPrice += projection.price;
-              this.totalPrice = totalPrice;
+              // Get movie reviews to calculate average rating
+              this.movieReviewService.getByMovieId(movie.id).subscribe(reviews => {
+                const reviewCount = reviews.length;
+                const averageRating = reviewCount > 0 
+                  ? Math.round((reviews.reduce((sum, review) => sum + review.rating, 0) / reviewCount) * 10) / 10 
+                  : 0;
+
+                const itemWithDetails = {
+                  cartItem: cartItem,
+                  movie: movie,
+                  projection: projection,
+                  movieAverageRating: averageRating,
+                  movieReviewCount: reviewCount
+                };
+                this.cartItemsWithDetails.push(itemWithDetails);
+                totalPrice += projection.price;
+                this.totalPrice = totalPrice;
+              });
             }
           });
         }
@@ -256,16 +267,22 @@ export class UserComponent implements OnInit {
     return '★'.repeat(rating) + '☆'.repeat(5 - rating);
   }
 
+  public roundRating(rating: number): number {
+    return Math.round(rating);
+  }
+
+
+
   public canModify(status: CartItemStatus | string): boolean {
-    return status === CartItemStatus.BOOKED || status === 'BOOKED' || status === 'rezervisano';
+    return status === CartItemStatus.BOOKED || status === 'BOOKED';
   }
 
   public canDelete(status: CartItemStatus | string): boolean {
-    return status === CartItemStatus.WATCHED || status === 'WATCHED' || status === 'gledano';
+    return status === CartItemStatus.WATCHED || status === 'WATCHED';
   }
 
   public canRate(status: CartItemStatus | string): boolean {
-    return status === CartItemStatus.WATCHED || status === 'WATCHED' || status === 'gledano';
+    return status === CartItemStatus.WATCHED || status === 'WATCHED';
   }
 
   private showUpdateExistingReviewDialog(cartItem: CartItem, movie: Movie, rating: number): void {
@@ -352,6 +369,71 @@ export class UserComponent implements OnInit {
             });
           }
         });
+      }
+    });
+  }
+
+  // Check if current user is admin (has access to testing features)
+  public isAdmin(): boolean {
+    return UserService.isCurrentUserAdmin();
+  }
+
+  // Get current user role for display
+  public getCurrentUserRole(): string {
+    const role = UserService.getCurrentUserRole();
+    return role === UserRole.ADMIN ? 'Admin' : 'Watcher';
+  }
+
+  // Toggle admin mode for testing (development feature)
+  public toggleAdminMode(): void {
+    const isCurrentlyAdmin = UserService.isCurrentUserAdmin();
+    
+    Swal.fire({
+      title: isCurrentlyAdmin ? 'Onemogući Admin Mod' : 'Omogući Admin Mod',
+      text: isCurrentlyAdmin 
+        ? 'Ovo će ukloniti admin privilegije.' 
+        : 'Ovo će omogućiti admin funkcionalnosti za testiranje.',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: isCurrentlyAdmin ? 'Onemogući' : 'Omogući',
+      cancelButtonText: 'Otkaži',
+      confirmButtonColor: isCurrentlyAdmin ? '#d33' : '#3085d6',
+      cancelButtonColor: '#6c757d'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        UserService.setAdminOverride(!isCurrentlyAdmin);
+        this.snackBar.open(
+          isCurrentlyAdmin ? 'Admin mod onemogućen' : 'Admin mod omogućen', 
+          'Zatvori', 
+          { duration: 3000 }
+        );
+        // Force component refresh to update UI
+        setTimeout(() => window.location.reload(), 1000);
+      }
+    });
+  }
+
+  // Testing method: Regenerate movie projections with new random dates (admin only)
+  public regenerateProjections(): void {
+    if (!this.isAdmin()) {
+      this.snackBar.open('Nemate dozvolu za ovu akciju', 'Zatvori', { duration: 3000 });
+      return;
+    }
+
+    Swal.fire({
+      title: 'Regenerisati projekcije?',
+      text: 'Ovo će kreirati nove random datume za sve projekcije filmova.',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Da, regeneriši!',
+      cancelButtonText: 'Otkaži',
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.movieService.regenerateProjections();
+        this.loadUserCart(); // Reload cart to show new dates
+        this.snackBar.open('Projekcije regenerisane sa novim datumima!', 'Zatvori', { duration: 3000 });
       }
     });
   }

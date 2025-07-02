@@ -118,17 +118,17 @@
     overflow: visible;
 }
 
-.status-rezervisano, .status-BOOKED {
+.status-booked, .status-BOOKED {
     color: #2196F3;
     font-weight: bold;
 }
 
-.status-gledano, .status-WATCHED {
+.status-watched, .status-WATCHED {
     color: #4CAF50;
     font-weight: bold;
 }
 
-.status-otkazano, .status-CANCELLED {
+.status-cancelled, .status-CANCELLED {
     color: #F44336;
     font-weight: bold;
 }
@@ -236,4 +236,46 @@
     display: flex;
     flex-direction: column;
     padding: 8px;
+}
+
+/* Role section styling */
+.role-section {
+    margin-top: 30px;
+    padding: 20px;
+    border: 2px solid #4caf50;
+    border-radius: 8px;
+    background-color: rgba(76, 175, 80, 0.1);
+    text-align: center;
+}
+
+.role-section h3 {
+    color: #4caf50;
+    margin-bottom: 10px;
+}
+
+.role-section p {
+    color: #ddd;
+    margin-bottom: 15px;
+    font-style: italic;
+}
+
+/* Testing section styling */
+.testing-section {
+    margin-top: 20px;
+    padding: 20px;
+    border: 2px dashed #ffa726;
+    border-radius: 8px;
+    background-color: rgba(255, 167, 38, 0.1);
+    text-align: center;
+}
+
+.testing-section h3 {
+    color: #ffa726;
+    margin-bottom: 10px;
+}
+
+.testing-section p {
+    color: #ddd;
+    margin-bottom: 15px;
+    font-style: italic;
 }
